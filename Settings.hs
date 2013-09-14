@@ -11,7 +11,7 @@ import IRC.Util
 server :: IO String
 server   = readSetting "server"
 port :: IO Int
-port     = readSetting' "port"
+port     = readSettingInt "port"
 chan :: IO String
 chan     = readSetting "channel"
 nick :: IO String
