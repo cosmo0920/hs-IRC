@@ -12,7 +12,6 @@ import System.IO
 import System.Exit
 import System.Process
 import Text.Regex.Posix
-import Control.Arrow
 import Control.Monad.Reader
 import Control.Exception
 import Text.Printf
@@ -31,12 +30,14 @@ defaultMain = do
 -- | Connect to the server and return the initial bot state
 connect :: IO Bot
 connect = notify $ do
-  h <- connectTo server (PortNumber (fromIntegral port))
+  serv' <- server
+  port' <- port
+  h <- connectTo serv' (PortNumber (fromIntegral port'))
   hSetBuffering h NoBuffering
   return (Bot h)
     where
       notify a = bracket_
-        (printf "Connecting to %s ... " server >> hFlush stdout)
+        (server >>= printf "Connecting to %s ... " >> hFlush stdout)
         (putStrLn "done.")
         a
 
@@ -45,9 +46,11 @@ connect = notify $ do
 run :: Net ()
 run = do
   -- write "PASS" password
-  write "NICK" nick
-  write "USER" (nick++" 0 * :haskell bot")
-  write "JOIN" chan
+  nick' <- liftIO $ nick
+  chan' <- liftIO $ chan
+  write "NICK" nick'
+  write "USER" (nick'++" 0 * :haskell bot")
+  write "JOIN" chan'
   asks socket >>= listen
 
 -- | Process each line from the server
@@ -71,11 +74,15 @@ eval     x                     = regexhaskell x -- match regexp or ignore everyt
 
 -- | Send a privmsg to the current chan + server
 privmsg :: String -> Net ()
-privmsg s = write "PRIVMSG" (chan ++ " :" ++ s)
+privmsg s = do
+  chan' <- liftIO $ chan
+  write "PRIVMSG" (chan' ++ " :" ++ s)
 
 -- | Send a privmsg to the current chan + server
 noticemsg :: String -> Net ()
-noticemsg s = write "NOTICE" (chan ++ " :" ++ s)
+noticemsg s = do
+  chan' <- liftIO $ chan
+  write "NOTICE" (chan' ++ " :" ++ s)
 
 -- | Send a message out to desktop popup to use notify-send
 notifysendmsg :: String -> Net ()
