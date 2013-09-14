@@ -45,7 +45,8 @@ connect = notify $ do
 -- Join a channel, and start processing commands
 run :: Net ()
 run = do
-  -- write "PASS" password
+  -- pass <- liftIO password
+  -- write "PASS" pass
   nick' <- liftIO $ nick
   chan' <- liftIO $ chan
   write "NICK" nick'
