@@ -36,4 +36,14 @@ $ cp setting-dummy.json setting.json
 
 * * * *
 
+### Haddock
+
+This code contains haddock style comments.
+
+So, you can generate haddock document as follows:
+
+```bash
+$ cabal[-dev] haddock --executables [--hyperlink-source] # if you want to see highlighted code in document.
+```
+
 This code is provided under the MIT LICENSE. see: [LICENSE](LICENSE)
