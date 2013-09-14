@@ -2,7 +2,7 @@
 -- | using aeson-lens
 --
 --   > readSetting "server" :: IO String
---   > readSetting' "port" :: IO Int
+--   > readSettingInt "port" :: IO Int
 module IRC.Util
   ( readSetting
   , readSettingInt ) where
