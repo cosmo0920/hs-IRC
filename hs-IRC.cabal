@@ -22,6 +22,7 @@ executable hs-IRC
   other-modules: Type
                  Settings
                  IRC.Core
+                 IRC.Util
   ghc-options:       -Wall -O2 -fno-warn-type-defaults -fno-warn-unused-do-bind
   extensions: ExtendedDefaultRules
               NoImplicitPrelude
