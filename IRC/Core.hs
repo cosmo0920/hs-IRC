@@ -33,6 +33,7 @@ connect = notify $ do
   serv' <- server
   port' <- port
   h <- connectTo serv' (PortNumber (fromIntegral port'))
+  hSetEncoding h utf8
   hSetBuffering h NoBuffering
   return (Bot h)
     where
@@ -103,6 +104,5 @@ regexhaskell x = do
 write :: String -> String -> Net ()
 write s t = do
   h <- asks socket
-  liftIO $ hSetEncoding h utf8
   liftIO $ hPrintf h "%s %s\r\n" s t
   liftIO $ printf    "> %s %s\n" s t
