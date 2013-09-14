@@ -22,9 +22,19 @@ executable hs-IRC
   other-modules: Type
                  Settings
                  IRC.Core
+  ghc-options:       -Wall -O2 -fno-warn-type-defaults -fno-warn-unused-do-bind
+  extensions: ExtendedDefaultRules
+              NoImplicitPrelude
+              CPP
+              GADTs
   build-depends:       base        >= 4.5 && < 5
                      , network     >= 2.3
                      , mtl         >= 2.0
                      , process     >= 1.1
                      , regex-posix >= 0.94
+                     , text        >= 0.11
+                     , bytestring  >= 0.9
+                     , aeson       >= 0.6
+                     , lens        >= 3.9 && < 4
+                     , aeson-lens  >= 0.5
   default-language: Haskell2010
