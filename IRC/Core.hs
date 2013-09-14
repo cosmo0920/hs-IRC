@@ -94,7 +94,7 @@ notifysendmsg s = do
 regexhaskell :: String -> Net ()
 regexhaskell x = do
   if (x =~ "(H|h)askell" :: Bool) then
-    notifysendmsg "notify-send IRC (H|h)askell regexp matched'"
+    notifysendmsg "notify-send IRC '(H|h)askell regexp matched'"
   else
     return () -- ignore everything else
 
