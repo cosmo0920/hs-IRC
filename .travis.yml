@@ -1,0 +1,12 @@
+language: haskell
+
+before_script:
+  - cp setting-dummy.json setting.json
+
+script:
+  - ~/.cabal/bin/cabal-dev configure
+  - ~/.cabal/bin/cabal-dev build
+
+install:
+  - cabal install cabal-dev
+  - ~/.cabal/bin/cabal-dev install --only-dependencies --force-reinstalls
