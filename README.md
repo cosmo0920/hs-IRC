@@ -1,4 +1,7 @@
-## hs-IRC
+hs-IRC
+===
+
+[![Build Status](https://travis-ci.org/cosmo0920/hs-IRC.png?branch=master)](https://travis-ci.org/cosmo0920/hs-IRC)
 
 Simple IRC bot writen in Haskell.
 

@@ -9,4 +9,4 @@ script:
 
 install:
   - cabal install cabal-dev
-  - ~/.cabal/bin/cabal-dev install --only-dependencies --force-reinstalls
+  - ~/.cabal/bin/cabal-dev install --only-dependencies --force-reinstalls #FIXME
