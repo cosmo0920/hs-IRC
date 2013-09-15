@@ -50,8 +50,9 @@ run = do
   -- write "PASS" pass
   nick' <- liftIO $ nick
   chan' <- liftIO $ chan
+  real' <- liftIO $ realname
   write "NICK" nick'
-  write "USER" (nick'++" 0 * :haskell bot")
+  write "USER" (nick'++" 0 * :"++real')
   write "JOIN" chan'
   asks socket >>= listen
 
