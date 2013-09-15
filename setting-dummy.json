@@ -3,5 +3,6 @@
   "port":6667,
   "nick":"hsbot",
   "password":"password",
-  "channel":"#tutbot-testing"
+  "channel":"#tutbot-testing",
+  "realname":"haskell bot"
 }
