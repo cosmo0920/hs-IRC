@@ -43,6 +43,7 @@ connect = notify $ do
         (putStrLn "done.")
         a
 
+-- | execute password authentication if exists
 passwordAuth :: Net ()
 passwordAuth = do
   pass <- liftIO password
