@@ -49,4 +49,23 @@ So, you can generate haddock document as follows:
 $ cabal[-dev] haddock --executables [--hyperlink-source] # if you want to see highlighted code in document.
 ```
 
+* * * *
+
+### Settings
+
+* server
+    - server IP address/URL
+* port
+    - port number
+* nick
+    - nickname
+* password
+    - password (It does not need to always.)
+* channel
+    - connecting channel info
+* realname
+    - realname setting
+
+* * * *
+
 This code is provided under the MIT LICENSE. see: [LICENSE](LICENSE)
