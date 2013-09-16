@@ -24,10 +24,10 @@ executable hs-IRC
                  IRC.Core
                  IRC.Util
   ghc-options:       -Wall -O2 -fno-warn-type-defaults -fno-warn-unused-do-bind
-  extensions: ExtendedDefaultRules
-              NoImplicitPrelude
-              CPP
-              GADTs
+  default-extensions: ExtendedDefaultRules
+                      NoImplicitPrelude
+                      CPP
+                      GADTs
   build-depends:       base        >= 4.5 && < 5
                      , network     >= 2.3
                      , mtl         >= 2.0
