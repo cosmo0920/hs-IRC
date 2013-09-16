@@ -17,7 +17,7 @@ chan :: IO String
 chan     = readSetting "channel"
 nick :: IO String
 nick     = readSetting "nick"
-password :: IO String
-password = readSetting "password"
+password :: IO (Maybe String)
+password = readSetting' "password"
 realname :: IO String
 realname = readSetting "realname"

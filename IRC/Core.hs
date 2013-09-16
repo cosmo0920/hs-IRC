@@ -15,6 +15,7 @@ import Text.Regex.Posix
 import Control.Monad.Reader
 import Control.Exception
 import Text.Printf
+import Data.Maybe
 import Prelude hiding (catch)
 import Type
 import Settings
@@ -42,12 +43,19 @@ connect = notify $ do
         (putStrLn "done.")
         a
 
+passwordAuth :: Net ()
+passwordAuth = do
+  pass <- liftIO password
+  if isNothing pass then
+    return ()
+  else
+    write "PASS" (fromJust pass)
+
 -- | We're in the Net monad now, so we've connected successfully
 -- Join a channel, and start processing commands
 run :: Net ()
 run = do
-  -- pass <- liftIO password
-  -- write "PASS" pass
+  passwordAuth
   nick' <- liftIO $ nick
   chan' <- liftIO $ chan
   real' <- liftIO $ realname
