@@ -19,9 +19,7 @@ import Prelude
 -- | read from setting.json and return String
 readSetting :: String -> IO String
 readSetting val = do
-  fstr <- B.readFile "setting.json"
-  let v = decode fstr :: Maybe Value
-  let retval = v ^. key (pack val) :: Maybe String
+  retval <- readSetting' val
   let _retval = fromJust retval
   return _retval
 
