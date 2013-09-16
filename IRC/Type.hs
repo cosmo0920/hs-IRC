@@ -1,4 +1,4 @@
-module Type where
+module IRC.Type where
 import Control.Monad.Reader
 import System.IO
 

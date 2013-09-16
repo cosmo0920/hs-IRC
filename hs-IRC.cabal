@@ -19,8 +19,8 @@ cabal-version:       >=1.10
 
 executable hs-IRC
   main-is: hs-IRC.hs
-  other-modules: Type
-                 Settings
+  other-modules: IRC.Type
+                 IRC.Settings
                  IRC.Core
                  IRC.Util
   ghc-options:       -Wall -O2 -fno-warn-type-defaults -fno-warn-unused-do-bind

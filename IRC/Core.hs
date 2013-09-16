@@ -17,8 +17,8 @@ import Control.Exception
 import Text.Printf
 import Data.Maybe
 import Prelude hiding (catch)
-import Type
-import Settings
+import IRC.Type
+import IRC.Settings
 
 -- |Set up actions to run on start and end, and run the main loop
 defaultMain :: IO ()

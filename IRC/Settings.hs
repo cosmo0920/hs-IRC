@@ -1,5 +1,5 @@
 -- | Bot setting
-module Settings
+module IRC.Settings
   ( server
   , port
   , chan
