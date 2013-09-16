@@ -2,7 +2,7 @@
   "server":"irc.freenode.org",
   "port":6667,
   "nick":"hsbot",
-  "password":"password",
+  "_password":"password",
   "channel":"#tutbot-testing",
   "realname":"haskell bot"
 }
