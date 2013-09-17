@@ -7,7 +7,8 @@
 module IRC.Util
   ( readSetting
   , readSetting'
-  , readSettingInt ) where
+  , readSettingInt
+  , readSettingBool ) where
 
 import Data.Aeson (decode, Value)
 import Data.Maybe
@@ -38,6 +39,15 @@ readSettingInt val = do
   fstr <- B.readFile settingFile
   let v = decode fstr :: Maybe Value
   let retval = v ^. key (pack val) :: Maybe Int
+  let _retval = fromJust retval
+  return _retval
+
+-- | read from setting.json and return Int
+readSettingBool :: String -> IO Bool
+readSettingBool val = do
+  fstr <- B.readFile settingFile
+  let v = decode fstr :: Maybe Value
+  let retval = v ^. key (pack val) :: Maybe Bool
   let _retval = fromJust retval
   return _retval
 

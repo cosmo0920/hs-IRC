@@ -5,7 +5,8 @@ module IRC.Settings
   , chan
   , nick
   , password
-  , realname ) where
+  , realname
+  , usessl ) where
 import Prelude
 import IRC.Util
 
@@ -21,3 +22,5 @@ password :: IO (Maybe String)
 password = readSetting' "password"
 realname :: IO String
 realname = readSetting "realname"
+usessl :: IO Bool
+usessl = readSettingBool "usessl"

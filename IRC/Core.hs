@@ -25,9 +25,6 @@ import Prelude hiding (catch)
 import IRC.Type
 import IRC.Settings
 
-useSsl :: Bool
-useSsl = False
-
 ciphers :: [Cipher]
 ciphers =
         [ cipher_AES128_SHA1
@@ -52,6 +49,7 @@ connect = notify $ do
   h <- connectTo serv' (PortNumber (fromIntegral port'))
   hSetEncoding h utf8
   hSetBuffering h NoBuffering
+  useSsl <- usessl
   tls <- if useSsl
     then do
       let params = defaultParamsClient{pCiphers = ciphers}
@@ -87,7 +85,7 @@ run = do
   real' <- liftIO $ realname
   write "NICK" nick'
   write "USER" (nick'++" 0 * :"++real')
-  --write "JOIN" chan'
+  write "JOIN" chan'
   mctx <- asks tlsCtx
   if isNothing mctx then
     asks socket >>= listen
