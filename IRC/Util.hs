@@ -2,6 +2,7 @@
 -- | using aeson-lens
 --
 --   > readSetting "server" :: IO String
+--   > readSetting' "password" :: IO (Maybe String)
 --   > readSettingInt "port" :: IO Int
 module IRC.Util
   ( readSetting
@@ -26,7 +27,7 @@ readSetting val = do
 -- | read from setting.json and return Maybe String
 readSetting' :: String -> IO (Maybe String)
 readSetting' val = do
-  fstr <- B.readFile "setting.json"
+  fstr <- B.readFile settingFile
   let v = decode fstr :: Maybe Value
   let retval = v ^. key (pack val) :: Maybe String
   return retval
@@ -34,8 +35,11 @@ readSetting' val = do
 -- | read from setting.json and return Int
 readSettingInt :: String -> IO Int
 readSettingInt val = do
-  fstr <- B.readFile "setting.json"
+  fstr <- B.readFile settingFile
   let v = decode fstr :: Maybe Value
   let retval = v ^. key (pack val) :: Maybe Int
   let _retval = fromJust retval
   return _retval
+
+settingFile :: String
+settingFile = "setting.json"
