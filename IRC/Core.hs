@@ -8,6 +8,7 @@ module IRC.Core
   ) where
 import Data.List
 import Network
+import Network.BSD
 import Network.TLS
 import Network.TLS.Extra
 import qualified Crypto.Random.AESCtr as RA
@@ -83,8 +84,9 @@ run = do
   nick' <- liftIO $ nick
   chan' <- liftIO $ chan
   real' <- liftIO $ realname
+  hostname <- liftIO $ getHostName
   write "NICK" nick'
-  write "USER" (nick'++" 0 * :"++real')
+  write "USER" (nick'++" "++hostname++" * :"++real')
   write "JOIN" chan'
   mctx <- asks tlsCtx
   if isNothing mctx then
