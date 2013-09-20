@@ -48,11 +48,13 @@ readSettingBool val = do
   let _retval = fromJust retval
   return _retval
 
+-- | read setting from json
 readJsonFile :: IO (Maybe Value)
 readJsonFile = do
   fstr <- B.readFile settingFile
   let v = decode fstr :: Maybe Value
   return v
 
+-- | set setting file name
 settingFile :: String
 settingFile = "setting.json"

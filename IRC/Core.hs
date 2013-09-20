@@ -26,6 +26,7 @@ import Prelude hiding (catch)
 import IRC.Type
 import IRC.Settings
 
+-- | set up cipher setting array
 ciphers :: [Cipher]
 ciphers =
         [ cipher_AES128_SHA1
@@ -80,7 +81,7 @@ passwordAuth = do
 -- Join a channel, and start processing commands
 run :: Net ()
 run = do
-  passwordAuth -- seems to be not working properly #FIXME
+  passwordAuth
   nick' <- liftIO $ nick
   chan' <- liftIO $ chan
   real' <- liftIO $ realname
@@ -106,7 +107,7 @@ listen h = forever $ do
       ping x    = "PING :" `isPrefixOf` x
       pong x    = write "PONG" (':' : drop 6 x)
 
--- | Process each line from the server
+-- | Process each line from the server with ssl context
 listenSsl :: TLSCtx -> Net ()
 listenSsl ctx = forever $ do
   out <- recvData ctx
@@ -127,13 +128,13 @@ eval     "!lambda"             = noticemsg "λ!"
 eval x | "!id " `isPrefixOf` x = privmsg (drop 4 x)
 eval     x                     = regexhaskell x -- match regexp or ignore everything.
 
--- | Send a privmsg to the current chan + server
+-- | Send a private message to the current chan + server
 privmsg :: String -> Net ()
 privmsg s = do
   chan' <- liftIO $ chan
   write "PRIVMSG" (chan' ++ " :" ++ s)
 
--- | Send a privmsg to the current chan + server
+-- | Send a notice message to the current chan + server
 noticemsg :: String -> Net ()
 noticemsg s = do
   chan' <- liftIO $ chan
