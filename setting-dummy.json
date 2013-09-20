@@ -4,5 +4,6 @@
   "nick":"hsbot",
   "_password":"password",
   "channel":"#tutbot-testing",
-  "realname":"haskell bot"
+  "realname":"haskell bot",
+  "usessl":false
 }

@@ -8,6 +8,10 @@ module IRC.Core
   ) where
 import Data.List
 import Network
+import Network.BSD
+import Network.TLS
+import Network.TLS.Extra
+import qualified Crypto.Random.AESCtr as RA
 import System.IO
 import System.Exit
 import System.Process
@@ -16,9 +20,19 @@ import Control.Monad.Reader
 import Control.Exception
 import Text.Printf
 import Data.Maybe
+import qualified Data.ByteString.Lazy.Char8 as L
+import qualified Data.ByteString.Char8 as B
 import Prelude hiding (catch)
 import IRC.Type
 import IRC.Settings
+
+ciphers :: [Cipher]
+ciphers =
+        [ cipher_AES128_SHA1
+        , cipher_AES256_SHA1
+        , cipher_RC4_128_MD5
+        , cipher_RC4_128_SHA1
+        ]
 
 -- |Set up actions to run on start and end, and run the main loop
 defaultMain :: IO ()
@@ -36,7 +50,17 @@ connect = notify $ do
   h <- connectTo serv' (PortNumber (fromIntegral port'))
   hSetEncoding h utf8
   hSetBuffering h NoBuffering
-  return (Bot h)
+  useSsl <- usessl
+  tls <- if useSsl
+    then do
+      let params = defaultParamsClient{pCiphers = ciphers}
+      g <- RA.makeSystem
+      con <- contextNewOnHandle h params g
+      handshake con
+      return $ Just con
+    else return Nothing
+  return Bot { socket = h
+             , tlsCtx = tls }
     where
       notify a = bracket_
         (server >>= printf "Connecting to %s ... " >> hFlush stdout)
@@ -56,14 +80,19 @@ passwordAuth = do
 -- Join a channel, and start processing commands
 run :: Net ()
 run = do
-  passwordAuth
+  -- passwordAuth -- seems to be not working properly #FIXME
   nick' <- liftIO $ nick
   chan' <- liftIO $ chan
   real' <- liftIO $ realname
+  hostname <- liftIO $ getHostName
   write "NICK" nick'
-  write "USER" (nick'++" 0 * :"++real')
+  write "USER" (nick'++" "++hostname++" * :"++real')
   write "JOIN" chan'
-  asks socket >>= listen
+  mctx <- asks tlsCtx
+  if isNothing mctx then
+    asks socket >>= listen
+  else
+    listenSsl (fromJust mctx)
 
 -- | Process each line from the server
 listen :: Handle -> Net ()
@@ -71,6 +100,20 @@ listen h = forever $ do
   s <- init `fmap` liftIO (hGetLine h)
   liftIO (putStrLn s)
   if ping s then pong s else eval (clean s)
+    where
+      forever a = a >> forever a
+      clean     = drop 1 . dropWhile (/= ':') . drop 1
+      ping x    = "PING :" `isPrefixOf` x
+      pong x    = write "PONG" (':' : drop 6 x)
+
+-- | Process each line from the server
+listenSsl :: TLSCtx -> Net ()
+listenSsl ctx = forever $ do
+  out <- recvData ctx
+  liftIO (B.putStrLn out)
+  if ping (B.unpack out) then
+     pong (B.unpack out)
+  else eval (clean (B.unpack out))
     where
       forever a = a >> forever a
       clean     = drop 1 . dropWhile (/= ':') . drop 1
@@ -114,5 +157,9 @@ regexhaskell x = do
 write :: String -> String -> Net ()
 write s t = do
   h <- asks socket
-  liftIO $ hPrintf h "%s %s\r\n" s t
+  mctx <- asks tlsCtx
+  if isNothing mctx then
+    liftIO $ hPrintf h "%s %s\r\n" s t
+  else
+    liftIO $ sendData (fromJust mctx) (L.pack $ printf "%s %s\r\n" s t)
   liftIO $ printf    "> %s %s\n" s t
