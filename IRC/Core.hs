@@ -80,7 +80,7 @@ passwordAuth = do
 -- Join a channel, and start processing commands
 run :: Net ()
 run = do
-  passwordAuth
+  -- passwordAuth -- seems to be not working properly #FIXME
   nick' <- liftIO $ nick
   chan' <- liftIO $ chan
   real' <- liftIO $ realname
