@@ -53,8 +53,10 @@ $ cabal[-dev] haddock --executables [--hyperlink-source] # if you want to see hi
 
 ### Settings
 
+setting.json contains follwing items:
+
 * server
-    - server IP address/URL
+    - server URL
 * port
     - port number
 * nick
@@ -64,7 +66,7 @@ $ cabal[-dev] haddock --executables [--hyperlink-source] # if you want to see hi
 * channel
     - connecting channel info
 * realname
-    - realname setting
+    - realname setting (Mixed case is not allowed.)
 
 * * * *
 
