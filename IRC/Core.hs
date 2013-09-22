@@ -126,7 +126,8 @@ eval :: String -> Net ()
 eval     "!quit-lambdabot"     = write "QUIT" ":Exiting" >> liftIO (exitWith ExitSuccess)
 eval     "!lambda"             = noticemsg "λ!"
 eval x | "!id " `isPrefixOf` x = privmsg (drop 4 x)
-eval     x                     = regexhaskell x -- match regexp or ignore everything.
+eval x | regexhaskell x        = noticemsg x
+eval     _                     = return () -- ignore anything else.
 
 -- | Send a private message to the current chan + server
 privmsg :: String -> Net ()
@@ -146,13 +147,11 @@ notifysendmsg s = do
   _ <- liftIO $ system s
   return ()
 
--- | when irc message contains /(H|h)askell/ , it executes notify-send to notify
-regexhaskell :: String -> Net ()
+-- | when irc message contains /(H|h)askell/ , it returns true
+--   otherwise, return false.
+regexhaskell :: String -> Bool
 regexhaskell x = do
-  if (x =~ "(H|h)askell" :: Bool) then
-    notifysendmsg "notify-send IRC '(H|h)askell regexp matched'"
-  else
-    return () -- ignore everything else
+  x =~ "(H|h)askell" :: Bool
 
 -- | Send a message out to the server we're currently connected to
 write :: String -> String -> Net ()
