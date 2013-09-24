@@ -126,7 +126,7 @@ eval :: String -> Net ()
 eval     "!quit-lambdabot"     = write "QUIT" ":Exiting" >> liftIO (exitWith ExitSuccess)
 eval     "!lambda"             = noticemsg "λ!"
 eval x | "!id " `isPrefixOf` x = privmsg (drop 4 x)
-eval x | regexhaskell x        = noticemsg x
+eval x | regexhaskell x        = notifysendmsg x
 eval     _                     = return () -- ignore anything else.
 
 -- | Send a private message to the current chan + server
