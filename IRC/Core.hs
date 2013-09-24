@@ -143,8 +143,8 @@ noticemsg s = do
 
 -- | Send a message out to desktop popup to use notify-send
 notifysendmsg :: String -> Net ()
-notifysendmsg s = do
-  _ <- liftIO $ system s
+notifysendmsg msg = do
+  _ <- liftIO $ system $ "notify-send IRC '(H|h)askell regexp matched.\nIRC message :"++msg++"'"
   return ()
 
 -- | when irc message contains /(H|h)askell/ , it returns true
