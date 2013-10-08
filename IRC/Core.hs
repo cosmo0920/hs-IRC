@@ -53,12 +53,7 @@ connect = notify $ do
   hSetBuffering h NoBuffering
   useSsl <- usessl
   tls <- if useSsl
-    then do
-      let params = defaultParamsClient{pCiphers = ciphers}
-      g <- RA.makeSystem
-      con <- contextNewOnHandle h params g
-      handshake con
-      return $ Just con
+    then addTLSContext h
     else return Nothing
   return Bot { socket = h
              , tlsCtx = tls }
@@ -67,6 +62,15 @@ connect = notify $ do
         (server >>= printf "Connecting to %s ... " >> hFlush stdout)
         (putStrLn "done.")
         a
+
+-- | add TLS Context
+addTLSContext :: Handle -> IO (Maybe Context)
+addTLSContext h = do
+  let params = defaultParamsClient{pCiphers = ciphers}
+  g <- RA.makeSystem
+  con <- contextNewOnHandle h params g
+  handshake con
+  return $ Just con
 
 -- | execute password authentication if exists
 passwordAuth :: Net ()
