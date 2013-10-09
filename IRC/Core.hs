@@ -10,8 +10,6 @@ import Data.List
 import Network
 import Network.BSD
 import Network.TLS
-import Network.TLS.Extra
-import qualified Crypto.Random.AESCtr as RA
 import System.IO
 import System.Exit
 import System.Process
@@ -25,15 +23,7 @@ import qualified Data.ByteString.Char8 as B
 import Prelude hiding (catch)
 import IRC.Type
 import IRC.Settings
-
--- | set up cipher setting array
-ciphers :: [Cipher]
-ciphers =
-        [ cipher_AES128_SHA1
-        , cipher_AES256_SHA1
-        , cipher_RC4_128_MD5
-        , cipher_RC4_128_SHA1
-        ]
+import IRC.Connection.TLSContext
 
 -- |Set up actions to run on start and end, and run the main loop
 defaultMain :: IO ()
@@ -62,15 +52,6 @@ connect = notify $ do
         (server >>= printf "Connecting to %s ... " >> hFlush stdout)
         (putStrLn "done.")
         a
-
--- | add TLS Context
-addTLSContext :: Handle -> IO (Maybe Context)
-addTLSContext h = do
-  let params = defaultParamsClient{pCiphers = ciphers}
-  g <- RA.makeSystem
-  con <- contextNewOnHandle h params g
-  handshake con
-  return $ Just con
 
 -- | execute password authentication if exists
 passwordAuth :: Net ()
