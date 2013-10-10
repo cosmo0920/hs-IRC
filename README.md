@@ -62,7 +62,7 @@ setting.json contains follwing items:
 * nick
     - nickname
 * password
-    - password (It does not need to always.)
+    - password (It does not need always.)
 * channel
     - connecting channel info
 * realname
