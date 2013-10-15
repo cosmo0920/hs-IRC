@@ -18,7 +18,6 @@ import Control.Monad.Reader
 import Control.Exception
 import Text.Printf
 import Data.Maybe
-import qualified Data.ByteString.Lazy.Char8 as L
 import qualified Data.ByteString.Char8 as B
 import Prelude hiding (catch)
 import IRC.Type
