@@ -23,6 +23,7 @@ import qualified Data.ByteString.Char8 as B
 import Prelude hiding (catch)
 import IRC.Type
 import IRC.Settings
+import IRC.Encode
 import IRC.Connection.TLSContext
 
 -- |Set up actions to run on start and end, and run the main loop
@@ -146,5 +147,5 @@ write s t = do
   if isNothing mctx then
     liftIO $ hPrintf h "%s %s\r\n" s t
   else
-    liftIO $ sendData (fromJust mctx) (L.pack $ printf "%s %s\r\n" s t)
+    liftIO $ sendData (fromJust mctx) (fromStrict' $ mkByteStringWithEncoding $ printf "%s %s\r\n" s t)
   liftIO $ printf    "> %s %s\n" s t

@@ -23,6 +23,7 @@ executable hs-IRC
                  IRC.Settings
                  IRC.Core
                  IRC.Util
+                 IRC.Encode
                  IRC.Connection.TLSContext
   ghc-options:       -Wall -O2 -fno-warn-type-defaults -fno-warn-unused-do-bind
   default-extensions: ExtendedDefaultRules

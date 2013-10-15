@@ -1,4 +1,6 @@
-module Encode where
+module IRC.Encode
+  ( mkByteStringWithEncoding
+  , fromStrict' ) where
 
 import Data.Text.Encoding
 import qualified Data.Text                     as T
@@ -10,8 +12,9 @@ import qualified Data.ByteString.Char8         as B
 import qualified Data.ByteString.Internal      as BI
 import qualified Data.ByteString.Lazy.Char8    as BL
 import qualified Data.ByteString.Lazy.Internal as BLI
+import Prelude
 
--- TODO: botで使っている型に合わせる
+-- | Convert String to ByteString(Strict) with Encoding
 mkByteStringWithEncoding :: String -> B.ByteString
 mkByteStringWithEncoding = encodeUtf8 . T.pack
 
@@ -21,7 +24,3 @@ mkByteStringWithEncoding = encodeUtf8 . T.pack
 fromStrict' :: P.ByteString -> BL.ByteString
 fromStrict' bs | S.null bs = BLI.Empty
                | otherwise = BLI.Chunk bs BLI.Empty
-
-byteStringToString :: B.ByteString -> String
-byteStringToString str = do
-  B.unpack str
