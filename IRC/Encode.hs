@@ -14,13 +14,17 @@ import qualified Data.ByteString.Lazy.Char8    as BL
 import qualified Data.ByteString.Lazy.Internal as BLI
 import Prelude
 
--- | Convert String to ByteString(Strict) with Encoding
+-- | Convert String to ByteString(Strict) with Encoding.
 mkByteStringWithEncoding :: String -> B.ByteString
 mkByteStringWithEncoding = encodeUtf8 . T.pack
 
 -- |/O(1)/ Convert a strict 'ByteString' into a lazy 'ByteString'.
--- | sadly hack...
--- | Bacause of bytestring 0.9.x version, nothing provides Lazy <-> Strict conversion function.
+--
+--  sadly hack...
+--
+--  Because of bytestring 0.9.x version, nothing provides Lazy \<-\> Strict conversion function.
+--
+--  written referring to bytestring-0.10.x
 fromStrict' :: P.ByteString -> BL.ByteString
 fromStrict' bs | S.null bs = BLI.Empty
                | otherwise = BLI.Chunk bs BLI.Empty
