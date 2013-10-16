@@ -1,5 +1,5 @@
 module IRC.Encode
-  ( mkByteStringWithEncoding
+  ( packWithEncoding
   , fromStrict' ) where
 
 import Data.Text.Encoding
@@ -15,8 +15,8 @@ import qualified Data.ByteString.Lazy.Internal as BLI
 import Prelude
 
 -- | Convert String to ByteString(Strict) with Encoding.
-mkByteStringWithEncoding :: String -> B.ByteString
-mkByteStringWithEncoding = encodeUtf8 . T.pack
+packWithEncoding :: String -> B.ByteString
+packWithEncoding = encodeUtf8 . T.pack
 
 -- |/O(1)/ Convert a strict 'ByteString' into a lazy 'ByteString'.
 --
