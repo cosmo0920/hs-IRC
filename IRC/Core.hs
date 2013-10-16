@@ -146,5 +146,5 @@ write s t = do
   if isNothing mctx then
     liftIO $ hPrintf h "%s %s\r\n" s t
   else
-    liftIO $ sendData (fromJust mctx) (fromStrict' $ mkByteStringWithEncoding $ printf "%s %s\r\n" s t)
+    liftIO $ sendData (fromJust mctx) (fromStrict' $ packWithEncoding $ printf "%s %s\r\n" s t)
   liftIO $ printf    "> %s %s\n" s t
