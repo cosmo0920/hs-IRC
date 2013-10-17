@@ -3,7 +3,7 @@
 --
 --   > type Net = ReaderT Bot IO
 --   > liftIO :: IO a -> Net a
-module IRC.Core
+module Network.IRC.Client.Core
   ( defaultMain
   ) where
 import Data.List
@@ -18,10 +18,10 @@ import Text.Printf
 import Data.Maybe
 import qualified Data.ByteString.Char8 as B
 import Prelude hiding (catch)
-import IRC.Type
-import IRC.Settings
-import IRC.Connection.TLSContext
-import IRC.Command
+import Network.IRC.Client.Type
+import Network.IRC.Client.Settings
+import Network.IRC.Client.Connection.TLSContext
+import Network.IRC.Client.Command
 
 -- |Set up actions to run on start and end, and run the main loop
 defaultMain :: IO ()

@@ -1,4 +1,4 @@
-module IRC.Type where
+module Network.IRC.Client.Type where
 import Control.Monad.Reader
 import System.IO
 import Network.TLS

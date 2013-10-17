@@ -1,4 +1,4 @@
-module IRC.Connection.TLSContext
+module Network.IRC.Client.Connection.TLSContext
   ( ciphers
   , addTLSContext ) where
 
