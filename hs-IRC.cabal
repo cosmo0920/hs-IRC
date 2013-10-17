@@ -25,7 +25,7 @@ executable hs-IRC
                  IRC.Util
                  IRC.Encode
                  IRC.Connection.TLSContext
-  ghc-options:       -Wall -O2 -fno-warn-type-defaults -fno-warn-unused-do-bind
+  ghc-options:       -Wall -O2 -fno-warn-type-defaults -fno-warn-unused-do-bind -threaded
   default-extensions: ExtendedDefaultRules
                       NoImplicitPrelude
                       CPP

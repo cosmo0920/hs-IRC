@@ -19,6 +19,7 @@ import Control.Exception
 import Text.Printf
 import Data.Maybe
 import qualified Data.ByteString.Char8 as B
+import Control.Concurrent
 import Prelude hiding (catch)
 import IRC.Type
 import IRC.Settings
@@ -129,7 +130,7 @@ noticemsg s = do
 -- | Send a message out to desktop popup to use notify-send
 notifysendmsg :: String -> Net ()
 notifysendmsg msg = do
-  _ <- liftIO $ system $ "notify-send IRC '(H|h)askell regexp matched.\nIRC message :"++msg++"'"
+  liftIO $ system $ "notify-send IRC '(H|h)askell regexp matched.\nIRC message :"++msg++"'"
   return ()
 
 -- | when irc message contains /(H|h)askell/ , it returns true
@@ -143,8 +144,11 @@ write :: String -> String -> Net ()
 write s t = do
   h <- asks socket
   mctx <- asks tlsCtx
-  if isNothing mctx then
-    liftIO $ hPrintf h "%s %s\r\n" s t
-  else
-    liftIO $ sendData (fromJust mctx) (fromStrict' $ packWithEncoding $ printf "%s %s\r\n" s t)
-  liftIO $ printf    "> %s %s\n" s t
+  liftIO $ do
+    forkIO $ do
+      if isNothing mctx then
+        hPrintf h "%s %s\r\n" s t
+      else
+        sendData (fromJust mctx) (fromStrict' $ packWithEncoding $ printf "%s %s\r\n" s t)
+    forkIO $ printf "> %s %s\n" s t
+  return ()

@@ -67,6 +67,8 @@ setting.json contains follwing items:
     - connecting channel info
 * realname
     - realname setting (Mixed case is not allowed.)
+* usessl
+    - use SSL/TLS (true/false)
 
 * * * *
 
