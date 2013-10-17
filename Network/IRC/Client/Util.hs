@@ -4,7 +4,7 @@
 --   > readSetting "server" :: IO String
 --   > readSetting' "password" :: IO (Maybe String)
 --   > readSettingInt "port" :: IO Int
-module IRC.Util
+module Network.IRC.Client.Util
   ( readSetting
   , readSetting'
   , readSettingInt

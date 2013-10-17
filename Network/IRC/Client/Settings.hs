@@ -1,5 +1,5 @@
 -- | Bot setting
-module IRC.Settings
+module Network.IRC.Client.Settings
   ( server
   , port
   , chan
@@ -8,7 +8,7 @@ module IRC.Settings
   , realname
   , usessl ) where
 import Prelude
-import IRC.Util
+import Network.IRC.Client.Util
 
 server :: IO String
 server   = readSetting "server"

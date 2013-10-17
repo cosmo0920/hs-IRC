@@ -1,4 +1,4 @@
-module IRC.Encode
+module Network.IRC.Client.Encode
   ( packWithEncoding
   , fromStrict' ) where
 

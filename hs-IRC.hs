@@ -1,5 +1,5 @@
 module Main where
-import IRC.Core
+import Network.IRC.Client.Core
 import Prelude
 
 -- | main function

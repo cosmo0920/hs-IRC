@@ -1,4 +1,4 @@
-module IRC.Command
+module Network.IRC.Client.Command
   ( privmsg
   , noticemsg
   , notifysendmsg
@@ -14,9 +14,9 @@ import Text.Printf
 import Data.Maybe
 import Control.Concurrent
 import Prelude hiding (catch)
-import IRC.Type
-import IRC.Encode
-import IRC.Settings
+import Network.IRC.Client.Type
+import Network.IRC.Client.Encode
+import Network.IRC.Client.Settings
 
 -- | Send a private message to the current chan + server
 privmsg :: String -> Net ()

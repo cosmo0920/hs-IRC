@@ -19,12 +19,13 @@ cabal-version:       >=1.10
 
 executable hs-IRC
   main-is: hs-IRC.hs
-  other-modules: IRC.Type
-                 IRC.Settings
-                 IRC.Core
-                 IRC.Util
-                 IRC.Encode
-                 IRC.Connection.TLSContext
+  other-modules: Network.IRC.Client.Type
+                 Network.IRC.Client.Settings
+                 Network.IRC.Client.Core
+                 Network.IRC.Client.Util
+                 Network.IRC.Client.Encode
+                 Network.IRC.Client.Command
+                 Network.IRC.Client.Connection.TLSContext
   ghc-options:       -Wall -O2 -fno-warn-type-defaults -fno-warn-unused-do-bind -threaded
   default-extensions: ExtendedDefaultRules
                       NoImplicitPrelude
