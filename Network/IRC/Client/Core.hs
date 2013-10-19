@@ -94,4 +94,5 @@ eval     "!quit-lambdabot"     = write "QUIT" ":Exiting" >> liftIO (exitWith Exi
 eval     "!lambda"             = noticemsg "λ!"
 eval x | "!id " `isPrefixOf` x = privmsg (drop 4 x)
 eval x | regexhaskell x        = notifysendmsg x
+eval     "!topic"              = askChannelTopic
 eval     _                     = return () -- ignore anything else.

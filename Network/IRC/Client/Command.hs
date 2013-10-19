@@ -3,6 +3,8 @@ module Network.IRC.Client.Command
   , noticemsg
   , notifysendmsg
   , regexhaskell
+  , askChannelTopic
+  , setChannelTopic
   , passwordAuth
   , ircJoin
   , write
@@ -46,6 +48,18 @@ notifysendmsg msg = do
 regexhaskell :: String -> Bool
 regexhaskell x = do
   x =~ "(H|h)askell" :: Bool
+
+-- | ask channel topic
+askChannelTopic :: Net ()
+askChannelTopic = do
+  chan' <- liftIO $ chan
+  write "TOPIC" chan'
+
+-- | set channel topic
+setChannelTopic :: String -> Net ()
+setChannelTopic s = do
+  chan' <- liftIO $ chan
+  write "TOPIC" (chan' ++ " :" ++ s)
 
 -- | execute password authentication if exists
 passwordAuth :: Net ()
