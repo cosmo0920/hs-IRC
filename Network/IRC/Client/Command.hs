@@ -6,6 +6,7 @@ module Network.IRC.Client.Command
   , passwordAuth
   , ircJoin
   , write
+  , writeSerial
   ) where
 import Data.List
 import Network.TLS
@@ -33,7 +34,8 @@ noticemsg s = do
   chan' <- liftIO $ chan
   write "NOTICE" (chan' ++ " :" ++ s)
 
--- | Send a message out to desktop popup to use notify-send
+-- | Send a message out to desktop popup to use notify-send.
+-- This function depends /notify-send/ command.
 notifysendmsg :: String -> Net ()
 notifysendmsg msg = do
   liftIO $ system $ "notify-send IRC '(H|h)askell regexp matched.\nIRC message :"++msg++"'"
@@ -52,7 +54,7 @@ passwordAuth = do
   if isNothing pass then
     return ()
   else
-    write "PASS" (fromJust pass)
+    writeSerial "PASS" (fromJust pass)
 
 -- | join IRC
 ircJoin :: Net ()
@@ -61,11 +63,12 @@ ircJoin = do
   chan' <- liftIO $ chan
   real' <- liftIO $ realname
   hostname <- liftIO $ getHostName
-  write "NICK" nick'
-  write "USER" (nick'++" "++hostname++" * :"++real')
-  write "JOIN" chan'
+  writeSerial "NICK" nick'
+  writeSerial "USER" (nick'++" "++hostname++" * :"++real')
+  writeSerial "JOIN" chan'
 
--- | Send a message out to the server we're currently connected to
+-- | Send a message out to the server we're currently connected to.
+--   /Async/ Version.
 write :: String -> String -> Net ()
 write s t = do
   h <- asks socket
@@ -77,4 +80,18 @@ write s t = do
       else
         sendData (fromJust mctx) (fromStrict' $ packWithEncoding $ printf "%s %s\r\n" s t)
     forkIO $ printf "> %s %s\n" s t
+  return ()
+
+-- | Send a message out to the server we're currently connected to.
+--  /Serial/ Version.
+writeSerial :: String -> String -> Net ()
+writeSerial s t = do
+  h <- asks socket
+  mctx <- asks tlsCtx
+  liftIO $ do
+    if isNothing mctx then
+      hPrintf h "%s %s\r\n" s t
+    else
+      sendData (fromJust mctx) (fromStrict' $ packWithEncoding $ printf "%s %s\r\n" s t)
+    printf "> %s %s\n" s t
   return ()
