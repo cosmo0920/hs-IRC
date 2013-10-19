@@ -8,7 +8,6 @@ module Network.IRC.Client.Core
   ) where
 import Data.List
 import Network
-import Network.BSD
 import Network.TLS
 import System.IO
 import System.Exit
@@ -51,27 +50,12 @@ connect = notify $ do
         (putStrLn "done.")
         a
 
--- | execute password authentication if exists
-passwordAuth :: Net ()
-passwordAuth = do
-  pass <- liftIO password
-  if isNothing pass then
-    return ()
-  else
-    write "PASS" (fromJust pass)
-
 -- | We're in the Net monad now, so we've connected successfully
 -- Join a channel, and start processing commands
 run :: Net ()
 run = do
   passwordAuth
-  nick' <- liftIO $ nick
-  chan' <- liftIO $ chan
-  real' <- liftIO $ realname
-  hostname <- liftIO $ getHostName
-  write "NICK" nick'
-  write "USER" (nick'++" "++hostname++" * :"++real')
-  write "JOIN" chan'
+  ircJoin
   mctx <- asks tlsCtx
   if isNothing mctx then
     asks socket >>= listen

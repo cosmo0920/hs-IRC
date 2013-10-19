@@ -3,10 +3,13 @@ module Network.IRC.Client.Command
   , noticemsg
   , notifysendmsg
   , regexhaskell
+  , passwordAuth
+  , ircJoin
   , write
   ) where
 import Data.List
 import Network.TLS
+import Network.BSD
 import System.Process
 import Text.Regex.Posix
 import Control.Monad.Reader
@@ -41,6 +44,26 @@ notifysendmsg msg = do
 regexhaskell :: String -> Bool
 regexhaskell x = do
   x =~ "(H|h)askell" :: Bool
+
+-- | execute password authentication if exists
+passwordAuth :: Net ()
+passwordAuth = do
+  pass <- liftIO password
+  if isNothing pass then
+    return ()
+  else
+    write "PASS" (fromJust pass)
+
+-- | join IRC
+ircJoin :: Net ()
+ircJoin = do
+  nick' <- liftIO $ nick
+  chan' <- liftIO $ chan
+  real' <- liftIO $ realname
+  hostname <- liftIO $ getHostName
+  write "NICK" nick'
+  write "USER" (nick'++" "++hostname++" * :"++real')
+  write "JOIN" chan'
 
 -- | Send a message out to the server we're currently connected to
 write :: String -> String -> Net ()
