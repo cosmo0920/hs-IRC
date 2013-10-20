@@ -90,8 +90,9 @@ listenSsl ctx = forever $ do
 
 -- | Dispatch a command
 eval :: String -> Net ()
-eval     "!quit-lambdabot"     = write "QUIT" ":Exiting" >> liftIO (exitWith ExitSuccess)
+eval     "!quit-lambdabot"     = writeSerial "QUIT" ":Exiting" >> liftIO (exitWith ExitSuccess)
 eval     "!lambda"             = noticemsg "λ!"
 eval x | "!id " `isPrefixOf` x = privmsg (drop 4 x)
 eval x | regexhaskell x        = notifysendmsg x
+eval     "!topic"              = askChannelTopic
 eval     _                     = return () -- ignore anything else.
