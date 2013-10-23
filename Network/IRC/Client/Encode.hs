@@ -1,5 +1,6 @@
 module Network.IRC.Client.Encode
   ( packWithEncoding
+  , unpackWithEncoding
   , fromStrict' ) where
 
 import Data.Text.Encoding
@@ -17,6 +18,10 @@ import Prelude
 -- | Convert String to ByteString(Strict) with Encoding.
 packWithEncoding :: String -> B.ByteString
 packWithEncoding = encodeUtf8 . T.pack
+
+-- | Convert ByteString to String with Encoding
+unpackWithEncoding :: B.ByteString -> String
+unpackWithEncoding = T.unpack . decodeUtf8
 
 -- |/O(1)/ Convert a strict 'ByteString' into a lazy 'ByteString'.
 --

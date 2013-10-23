@@ -21,6 +21,7 @@ import Network.IRC.Client.Type
 import Network.IRC.Client.Settings
 import Network.IRC.Client.Connection.TLSContext
 import Network.IRC.Client.Command
+import Network.IRC.Client.Encode
 
 -- |Set up actions to run on start and end, and run the main loop
 defaultMain :: IO ()
@@ -81,7 +82,7 @@ listenSsl ctx = forever $ do
   liftIO (B.putStrLn out)
   if ping (B.unpack out) then
      pong (B.unpack out)
-  else eval (clean (B.unpack out))
+  else eval (clean (unpackWithEncoding out))
     where
       forever a = a >> forever a
       clean     = drop 1 . dropWhile (/= ':') . drop 1
