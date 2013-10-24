@@ -47,7 +47,7 @@ notifysendmsg msg = do
 --   otherwise, return false.
 regexhaskell :: String -> Bool
 regexhaskell x = do
-  x =~ "(H|h)askell" :: Bool
+  x =~ "[Hh]askell" :: Bool
 
 -- | ask channel topic
 askChannelTopic :: Net ()
