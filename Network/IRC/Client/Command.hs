@@ -40,7 +40,7 @@ noticemsg s = do
 -- This function depends /notify-send/ command.
 notifysendmsg :: String -> Net ()
 notifysendmsg msg = do
-  liftIO $ system $ "notify-send IRC '(H|h)askell regexp matched.\nIRC message :"++msg++"'"
+  liftIO $ system $ "notify-send IRC '[Hh]askell regexp matched.\nIRC message :"++msg++"'"
   return ()
 
 -- | when irc message contains /(H|h)askell/ , it returns true
