@@ -39,6 +39,7 @@ connect = notify $ do
   h <- connectTo serv' (PortNumber (fromIntegral port'))
   hSetEncoding h utf8
   hSetBuffering h NoBuffering
+  hSetNewlineMode h universalNewlineMode
   useSsl <- usessl
   tls <- if useSsl
     then addTLSContext h
