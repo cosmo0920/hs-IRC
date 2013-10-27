@@ -18,11 +18,11 @@ import Text.Regex.Posix
 import Control.Monad.Reader
 import Text.Printf
 import Data.Maybe
-import Control.Concurrent
 import Prelude hiding (catch)
 import Network.IRC.Client.Type
 import Network.IRC.Client.Encode
 import Network.IRC.Client.Settings
+import Network.IRC.Client.ForkUtil
 
 -- | Send a private message to the current chan + server
 privmsg :: String -> Net ()
@@ -88,12 +88,13 @@ write s t = do
   h <- asks socket
   mctx <- asks tlsCtx
   liftIO $ do
-    forkIO $ do
+    forkFinally (do
       if isNothing mctx then
         hPrintf h "%s %s\r\n" s t
       else
-        sendData (fromJust mctx) (fromStrict' $ packWithEncoding $ printf "%s %s\r\n" s t)
-    forkIO $ printf "> %s %s\n" s t
+        sendData (fromJust mctx) (fromStrict' $ packWithEncoding $ printf "%s %s\r\n" s t))
+                 (\_ -> putStrLn "Something went wrong.")
+    forkFinally (printf "> %s %s\n" s t) (\_ -> putStrLn "Error!")
   return ()
 
 -- | Send a message out to the server we're currently connected to.
