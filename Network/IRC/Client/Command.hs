@@ -93,8 +93,8 @@ write s t = do
         hPrintf h "%s %s\r\n" s t
       else
         sendData (fromJust mctx) (fromStrict' $ packWithEncoding $ printf "%s %s\r\n" s t))
-                 (\_ -> putStrLn "Something went wrong.")
-    forkFinally (printf "> %s %s\n" s t) (\_ -> putStrLn "Error!")
+                 (\e -> putStrLn $ "[write] " ++ show e)
+    forkFinally (printf "> %s %s\n" s t) (\e -> putStrLn $ "[log] " ++ show e)
   return ()
 
 -- | Send a message out to the server we're currently connected to.

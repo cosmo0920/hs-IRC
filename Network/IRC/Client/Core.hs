@@ -29,7 +29,9 @@ defaultMain = do
   bracket connect disconnect loop
   where
     disconnect = hClose . socket
-    loop st    = catch (runReaderT run st) (\(SomeException _) -> return ())
+    loop st    = catch (runReaderT run st) (\(SomeException e) -> do
+                                              putStrLn $ "[connection] " ++ show e
+                                              return ())
 
 -- | Connect to the server and return the initial bot state
 connect :: IO Bot
