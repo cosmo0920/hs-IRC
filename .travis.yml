@@ -1,7 +1,7 @@
 language: haskell
 
 before_script:
-  - cp setting-dummy.json setting.json
+  - cp setting-dummy.yml setting.yml
 
 script:
   - ~/.cabal/bin/cabal-dev configure
