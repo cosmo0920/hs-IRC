@@ -1,9 +1,0 @@
-{
-  "server":"irc.freenode.org",
-  "port":6667,
-  "nick":"hsbot",
-  "_password":"password",
-  "channel":"#tutbot-testing",
-  "realname":"haskell bot",
-  "usessl":false
-}

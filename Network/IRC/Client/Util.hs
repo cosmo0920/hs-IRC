@@ -12,7 +12,9 @@ module Network.IRC.Client.Util
 
 import Data.Aeson (decode, Value)
 import Data.Maybe
-import qualified Data.ByteString.Lazy as B
+import qualified Data.ByteString as B
+import qualified Data.ByteString.Lazy as BL
+import Data.Yaml as Y
 import Data.Text
 import Control.Lens
 import Data.Aeson.Lens
@@ -28,14 +30,14 @@ readSetting val = do
 -- | read from setting.json and return Maybe String
 readSetting' :: String -> IO (Maybe String)
 readSetting' val = do
-  v <- readJsonFile
+  v <- readYamlFile
   let retval = v ^. key (pack val) :: Maybe String
   return retval
 
 -- | read from setting.json and return Int
 readSettingInt :: String -> IO Int
 readSettingInt val = do
-  v <- readJsonFile
+  v <- readYamlFile
   let retval = v ^. key (pack val) :: Maybe Int
   let _retval = fromJust retval
   return _retval
@@ -43,18 +45,18 @@ readSettingInt val = do
 -- | read from setting.json and return Bool
 readSettingBool :: String -> IO Bool
 readSettingBool val = do
-  v <- readJsonFile
+  v <- readYamlFile
   let retval = v ^. key (pack val) :: Maybe Bool
   let _retval = fromJust retval
   return _retval
 
--- | read setting from json
-readJsonFile :: IO (Maybe Value)
-readJsonFile = do
+-- | read setting from yaml
+readYamlFile :: IO (Maybe Value)
+readYamlFile = do
   fstr <- B.readFile settingFile
-  let v = decode fstr :: Maybe Value
+  let v = Y.decode fstr :: Maybe Value
   return v
 
 -- | set setting file name
 settingFile :: String
-settingFile = "setting.json"
+settingFile = "setting.yml"
