@@ -1,5 +1,5 @@
 dist*
 cabal-dev/
 *.swp
-setting.json
+setting.yml
 *.DS_Store
