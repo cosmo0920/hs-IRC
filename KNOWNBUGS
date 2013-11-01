@@ -1,0 +1,5 @@
+* suddenly unable to reply ping
+    - ping time out
+* several bugs to treat multibyte characters, but ascii environment works well!
+    - such as cannot write PVIVMSG into multibyte characters used channel
+    - sometimes appear garbage characters in logs
