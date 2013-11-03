@@ -15,8 +15,8 @@ This bot's source code was made in reference to [haskellwiki/Roll_your_own_IRC_b
 
 * ghc 7.4.1 @ Ubuntu 12.04.3 LTS
 * ghc 7.6.3 @ Windows 7 and 8
-   - When it installs dependend libraries, it must define `LANG=C`.
 * ghc 7.6.3 @ OSX 10.8
+   - Lexical error occurred when it installs dependent libraries, it must define `LANG=C` to avoid this error.
 
 ## Try it
 
