@@ -7,6 +7,17 @@ Simple IRC bot writen in Haskell.
 
 This bot's source code was made in reference to [haskellwiki/Roll_your_own_IRC_bot](http://www.haskell.org/haskellwiki/Roll_your_own_IRC_bot)
 
+## Requirement
+
+* Haskell Platform 2012.1.0.0 or later
+
+### currently, it can build following platforms:
+
+* ghc 7.4.1 @ Ubuntu 12.04.3 LTS
+* ghc 7.6.3 @ Windows 7 and 8
+   - When it installs dependend libraries, it must define `LANG=C`.
+* ghc 7.6.3 @ OSX 10.8
+
 ## Try it
 
 If you install cabal packages, __strongly recommended__ use cabal-dev.
