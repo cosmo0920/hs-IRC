@@ -64,7 +64,7 @@ $ cabal[-dev] haddock --executables [--hyperlink-source] # if you want to see hi
 
 ### Settings
 
-setting.json contains follwing items:
+setting.yml contains follwing items:
 
 * server
     - server URL
