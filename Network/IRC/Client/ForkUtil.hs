@@ -1,5 +1,5 @@
 module Network.IRC.Client.ForkUtil
-  ( forkFinally ) where
+  ( Network.IRC.Client.ForkUtil.forkFinally ) where
 import Prelude
 
 import Control.Exception.Base as Exception
