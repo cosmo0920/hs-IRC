@@ -16,7 +16,11 @@ import Control.Exception
 import Text.Printf
 import Data.Maybe
 import qualified Data.ByteString.Char8 as B
+#if __GLASGOW_HASKELL__ <= 704
 import Prelude hiding (catch)
+#else
+import Prelude
+#endif
 import Network.IRC.Client.Type
 import Network.IRC.Client.Settings
 import Network.IRC.Client.Connection.TLSContext
