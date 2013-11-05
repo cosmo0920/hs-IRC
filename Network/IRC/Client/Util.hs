@@ -10,10 +10,8 @@ module Network.IRC.Client.Util
   , readSettingInt
   , readSettingBool ) where
 
-import Data.Aeson (decode, Value)
 import Data.Maybe
 import qualified Data.ByteString as B
-import qualified Data.ByteString.Lazy as BL
 import Data.Yaml as Y
 import Data.Text
 import Control.Lens

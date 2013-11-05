@@ -18,7 +18,11 @@ import Text.Regex.Posix
 import Control.Monad.Reader
 import Text.Printf
 import Data.Maybe
+#if __GLASGOW_HASKELL__ <= 704
 import Prelude hiding (catch)
+#else
+import Prelude
+#endif
 import Network.IRC.Client.Type
 import Network.IRC.Client.Encode
 import Network.IRC.Client.Settings
