@@ -46,7 +46,7 @@ $ ~/.cabal/bin/cabal-dev install --only-dependencies
 ```bash
 $ ~/.cabal/bin/cabal-dev configure
 $ ~/.cabal/bin/cabal-dev build
-$ cp setting-dummy.json setting.json
+$ cp setting-dummy.yml setting.yml
 ```
 
 * * * *
