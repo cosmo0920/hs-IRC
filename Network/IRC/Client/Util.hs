@@ -1,9 +1,9 @@
 {-# OPTIONS_HADDOCK ignore-exports #-}
 -- | using aeson-lens
 --
---   > readSetting "server" :: IO String
---   > readSetting' "password" :: IO (Maybe String)
---   > readSettingInt "port" :: IO Int
+--   > readYamlValue "server" :: IO String
+--   > readYamlValue "port" :: IO Int
+--   > readYamlValueMaybe "password" :: IO (Maybe String)
 module Network.IRC.Client.Util
   ( readYamlValue
   , readYamlValueMaybe ) where
