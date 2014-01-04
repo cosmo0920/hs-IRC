@@ -16,6 +16,7 @@ import Network.BSD
 import System.Process
 import Text.Regex.Posix
 import Control.Monad.Reader
+import Control.Concurrent
 import Text.Printf
 import Data.Maybe
 #if __GLASGOW_HASKELL__ <= 704
@@ -26,7 +27,6 @@ import Prelude
 import Network.IRC.Client.Type
 import Network.IRC.Client.Encode
 import Network.IRC.Client.Settings
-import Network.IRC.Client.ForkUtil
 
 -- | Send a private message to the current chan + server
 privmsg :: String -> Net ()
@@ -92,12 +92,11 @@ write s t = do
   h <- asks socket
   mctx <- asks tlsCtx
   liftIO $ do
-    forkFinally (do
+    forkIO $ do
       if isNothing mctx then
         hPrintf h "%s %s\r\n" s t
       else
-        sendData (fromJust mctx) (fromStrict' $ packWithEncoding $ printf "%s %s\r\n" s t))
-                 (\e -> putStrLn $ "[write] " ++ show e)
+        sendData (fromJust mctx) (fromStrict' $ packWithEncoding $ printf "%s %s\r\n" s t)
     forkIO (printf "> %s %s\n" s t)
   return ()
 

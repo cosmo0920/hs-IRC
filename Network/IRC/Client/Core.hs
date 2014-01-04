@@ -13,6 +13,7 @@ import System.IO
 import System.Exit
 import Control.Monad.Reader
 import Control.Exception
+import Control.Concurrent
 import Text.Printf
 import Data.Maybe
 import qualified Data.ByteString.Char8 as B
@@ -76,7 +77,7 @@ run = do
 listen :: Handle -> Net ()
 listen h = forever $ do
   s <- init `fmap` liftIO (hGetLine h)
-  liftIO (putStrLn s)
+  liftIO $ forkIO (putStrLn s)
   if ping s then pong s else eval (clean s)
     where
       clean     = drop 1 . dropWhile (/= ':') . drop 1
@@ -87,7 +88,7 @@ listen h = forever $ do
 listenSsl :: TLSCtx -> Net ()
 listenSsl ctx = forever $ do
   out <- recvData ctx
-  liftIO (B.putStrLn out)
+  liftIO $ forkIO (B.putStrLn out)
   if ping (B.unpack out) then
      pong (B.unpack out)
   else eval (clean (unpackWithEncoding out))

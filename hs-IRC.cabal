@@ -23,7 +23,6 @@ executable hs-IRC
                  Network.IRC.Client.Settings
                  Network.IRC.Client.Core
                  Network.IRC.Client.Util
-                 Network.IRC.Client.ForkUtil
                  Network.IRC.Client.Encode
                  Network.IRC.Client.Command
                  Network.IRC.Client.Connection.TLSContext
