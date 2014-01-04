@@ -79,7 +79,6 @@ listen h = forever $ do
   liftIO (putStrLn s)
   if ping s then pong s else eval (clean s)
     where
-      forever a = a >> forever a
       clean     = drop 1 . dropWhile (/= ':') . drop 1
       ping x    = "PING :" `isPrefixOf` x
       pong x    = write "PONG" (':' : drop 6 x)
@@ -93,7 +92,6 @@ listenSsl ctx = forever $ do
      pong (B.unpack out)
   else eval (clean (unpackWithEncoding out))
     where
-      forever a = a >> forever a
       clean     = drop 1 . dropWhile (/= ':') . drop 1
       ping x    = "PING :" `isPrefixOf` x
       pong x    = write "PONG" (':' : drop 6 x)

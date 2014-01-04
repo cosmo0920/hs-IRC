@@ -4,9 +4,9 @@ before_script:
   - cp setting-dummy.yml setting.yml
 
 script:
-  - ~/.cabal/bin/cabal-dev configure
-  - ~/.cabal/bin/cabal-dev build
+  - cabal configure
+  - cabal build
 
 install:
-  - cabal install cabal-dev
-  - ~/.cabal/bin/cabal-dev install --only-dependencies --force-reinstalls #FIXME
+  - cabal sandbox init
+  - cabal install --only-dependencies --force-reinstalls #FIXME
