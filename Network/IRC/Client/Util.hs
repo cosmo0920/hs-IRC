@@ -5,10 +5,8 @@
 --   > readSetting' "password" :: IO (Maybe String)
 --   > readSettingInt "port" :: IO Int
 module Network.IRC.Client.Util
-  ( readSetting
-  , readSetting'
-  , readSettingInt
-  , readSettingBool ) where
+  ( readYamlValue
+  , readYamlValueMaybe ) where
 
 import Data.Maybe
 import qualified Data.ByteString as B
@@ -18,33 +16,17 @@ import Control.Lens
 import Data.Aeson.Lens
 import Prelude
 
--- | read from setting.json and return String
-readSetting :: String -> IO String
-readSetting val = do
-  retval <- readSetting' val
-  let _retval = fromJust retval
+-- | read from setting.json and return (ToJSON v, FromJSON v) => IO (Maybe v)
+readYamlValueMaybe :: (ToJSON v, FromJSON v) => String -> IO (Maybe v)
+readYamlValueMaybe val = do
+  v <- readYamlFile
+  let _retval = v ^. key (pack val)
   return _retval
 
--- | read from setting.json and return Maybe String
-readSetting' :: String -> IO (Maybe String)
-readSetting' val = do
-  v <- readYamlFile
-  let retval = v ^. key (pack val) :: Maybe String
-  return retval
-
--- | read from setting.json and return Int
-readSettingInt :: String -> IO Int
-readSettingInt val = do
-  v <- readYamlFile
-  let retval = v ^. key (pack val) :: Maybe Int
-  let _retval = fromJust retval
-  return _retval
-
--- | read from setting.json and return Bool
-readSettingBool :: String -> IO Bool
-readSettingBool val = do
-  v <- readYamlFile
-  let retval = v ^. key (pack val) :: Maybe Bool
+-- | read from setting.json and return (ToJSON v, FromJSON v) => IO v
+readYamlValue :: (ToJSON v, FromJSON v) => String -> IO v
+readYamlValue val = do
+  retval <- readYamlValueMaybe val
   let _retval = fromJust retval
   return _retval
 
