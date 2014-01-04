@@ -7,7 +7,11 @@ import Network.TLS.Extra
 import qualified Crypto.Random.AESCtr as RA
 import System.IO
 import Data.Maybe
+#if __GLASGOW_HASKELL__ <= 704
 import Prelude hiding (catch)
+#else
+import Prelude
+#endif
 
 -- | set up cipher setting array
 ciphers :: [Cipher]
