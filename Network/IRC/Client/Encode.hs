@@ -7,10 +7,7 @@ import Data.Text.Encoding
 import qualified Data.Text                     as T
 import qualified Data.ByteString               as P (ByteString) -- type name only
 import qualified Data.ByteString               as S
-import qualified Data.ByteString.Internal      as S
-import qualified Data.ByteString.Unsafe        as S
 import qualified Data.ByteString.Char8         as B
-import qualified Data.ByteString.Internal      as BI
 import qualified Data.ByteString.Lazy.Char8    as BL
 import qualified Data.ByteString.Lazy.Internal as BLI
 import Prelude
