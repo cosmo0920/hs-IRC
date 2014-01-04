@@ -11,16 +11,16 @@ import Prelude
 import Network.IRC.Client.Util
 
 server :: IO String
-server   = readSetting "server"
+server   = readYamlValue "server"
 port :: IO Int
-port     = readSettingInt "port"
+port     = readYamlValue "port"
 chan :: IO String
-chan     = readSetting "channel"
+chan     = readYamlValue "channel"
 nick :: IO String
-nick     = readSetting "nick"
+nick     = readYamlValue "nick"
 password :: IO (Maybe String)
-password = readSetting' "password"
+password = readYamlValueMaybe "password"
 realname :: IO String
-realname = readSetting "realname"
+realname = readYamlValue "realname"
 usessl :: IO Bool
-usessl = readSettingBool "usessl"
+usessl = readYamlValue "usessl"
