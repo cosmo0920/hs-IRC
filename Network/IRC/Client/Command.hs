@@ -5,15 +5,17 @@ module Network.IRC.Client.Command
   , regexhaskell
   , askChannelTopic
   , setChannelTopic
+  , setBotNickname
   , passwordAuth
   , ircJoin
   , write
   , writeSerial
-  ) where
+  , loggingMsg ) where
 import Data.List
 import Network.TLS
 import Network.BSD
 import System.Process
+import System.Log.FastLogger
 import Text.Regex.Posix
 import Control.Monad.Reader
 import Control.Concurrent
@@ -65,6 +67,10 @@ setChannelTopic s = do
   chan' <- liftIO $ chan
   write "TOPIC" (chan' ++ " :" ++ s)
 
+-- | set Bot nickname
+setBotNickname :: String -> Net ()
+setBotNickname s = write "NICK" s
+
 -- | execute password authentication if exists
 passwordAuth :: Net ()
 passwordAuth = do
@@ -91,13 +97,14 @@ write :: String -> String -> Net ()
 write s t = do
   h <- asks socket
   mctx <- asks tlsCtx
+  logSet <- asks logger
   liftIO $ do
     forkIO $ do
       if isNothing mctx then
         hPrintf h "%s %s\r\n" s t
       else
         sendData (fromJust mctx) (fromStrict' $ packWithEncoding $ printf "%s %s\r\n" s t)
-    forkIO (printf "> %s %s\n" s t)
+    loggingMsg logSet (printf "> %s %s" s t)
   return ()
 
 -- | Send a message out to the server we're currently connected to.
@@ -106,10 +113,16 @@ writeSerial :: String -> String -> Net ()
 writeSerial s t = do
   h <- asks socket
   mctx <- asks tlsCtx
+  logSet <- asks logger
   liftIO $ do
     if isNothing mctx then
       hPrintf h "%s %s\r\n" s t
     else
       sendData (fromJust mctx) (fromStrict' $ packWithEncoding $ printf "%s %s\r\n" s t)
-    printf "> %s %s\n" s t
+    loggingMsg logSet (printf "> %s %s" s t)
   return ()
+
+loggingMsg :: LoggerSet -> String -> IO ()
+loggingMsg loggerSet msg = do
+  pushLogStr loggerSet (toLogStr $ msg ++ "\n")
+  flushLogStr loggerSet

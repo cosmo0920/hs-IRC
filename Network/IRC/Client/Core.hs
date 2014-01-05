@@ -11,9 +11,9 @@ import Network
 import Network.TLS
 import System.IO
 import System.Exit
+import System.Log.FastLogger
 import Control.Monad.Reader
 import Control.Exception
-import Control.Concurrent
 import Text.Printf
 import Data.Maybe
 import qualified Data.ByteString.Char8 as B
@@ -49,12 +49,14 @@ connect = notify $ do
   -- TODO: search suitable Mode
   -- such as, universalNewlineMode, noNewlineTranslation, nativeNewlineMode
   hSetNewlineMode h nativeNewlineMode
+  loggerSet <- newLoggerSet defaultBufSize Nothing
   useSsl <- usessl
   tls <- if useSsl
     then addTLSContext h
     else return Nothing
   return Bot { socket = h
-             , tlsCtx = tls }
+             , tlsCtx = tls
+             , logger = loggerSet }
     where
       notify a = bracket_
         (server >>= printf "Connecting to %s ... " >> hFlush stdout)
@@ -77,7 +79,8 @@ run = do
 listen :: Handle -> Net ()
 listen h = forever $ do
   s <- init `fmap` liftIO (hGetLine h)
-  liftIO $ forkIO (putStrLn s)
+  logSet <- asks logger
+  liftIO $ loggingMsg logSet s
   if ping s then pong s else eval (clean s)
     where
       clean     = drop 1 . dropWhile (/= ':') . drop 1
@@ -88,7 +91,8 @@ listen h = forever $ do
 listenSsl :: TLSCtx -> Net ()
 listenSsl ctx = forever $ do
   out <- recvData ctx
-  liftIO $ forkIO (B.putStrLn out)
+  logSet <- asks logger
+  liftIO $ loggingMsg logSet (B.unpack out)
   if ping (B.unpack out) then
      pong (B.unpack out)
   else eval (clean (unpackWithEncoding out))
