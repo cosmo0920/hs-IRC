@@ -92,7 +92,7 @@ listenSsl :: TLSCtx -> Net ()
 listenSsl ctx = forever $ do
   out <- recvData ctx
   logSet <- asks logger
-  liftIO $ loggingMsg logSet (B.unpack out)
+  liftIO $ loggingMsg logSet (unpackWithEncoding out)
   if ping (B.unpack out) then
      pong (B.unpack out)
   else eval (clean (unpackWithEncoding out))
