@@ -14,9 +14,10 @@ import System.Exit
 import System.Log.FastLogger
 import Control.Monad.Reader
 import Control.Exception
+import Control.Concurrent
 import Text.Printf
 import Data.Maybe
-import qualified Data.ByteString.Char8 as B
+import Data.IORef
 #if __GLASGOW_HASKELL__ <= 704
 import Prelude hiding (catch)
 #else
@@ -77,35 +78,67 @@ run = do
 
 -- | Process each line from the server
 listen :: Handle -> Net ()
-listen h = forever $ do
-  s <- init `fmap` liftIO (hGetLine h)
+listen h = do
   logSet <- asks logger
-  liftIO $ loggingMsg logSet s
-  if ping s then pong s else eval (clean s)
-    where
-      clean     = drop 1 . dropWhile (/= ':') . drop 1
-      ping x    = "PING :" `isPrefixOf` x
-      pong x    = write "PONG" (':' : drop 6 x)
+  let bot = Bot { socket = h
+                , tlsCtx = Nothing
+                , logger = logSet }
+  serv <- liftIO $ server
+  pingref <- liftIO $ newIORef False
+  liftIO $ forever $ do
+    s <- init `fmap` liftIO (hGetLine h)
+    let s' = filter (`notElem` "\r\n") s
+    loggingMsg logSet s'
+    handleMsg bot pingref s'
+  liftIO $ void . forkIO $ handlePing bot pingref serv
 
 -- | Process each line from the server with ssl context
 listenSsl :: TLSCtx -> Net ()
-listenSsl ctx = forever $ do
-  out <- recvData ctx
+listenSsl ctx = do
   logSet <- asks logger
-  liftIO $ loggingMsg logSet (unpackWithEncoding out)
-  if ping (B.unpack out) then
-     pong (B.unpack out)
-  else eval (clean (unpackWithEncoding out))
+  sock <- asks socket
+  let bot = Bot { socket = sock
+                , tlsCtx = (Just ctx)
+                , logger = logSet }
+  serv <- liftIO $ server
+  pingref <- liftIO $ newIORef False
+  liftIO $ forever $ do
+    out <- recvData ctx
+    let msg = filter (`notElem` "\r\n") $ unpackWithEncoding out
+    loggingMsg logSet msg
+    void . forkIO $ handleMsg bot pingref msg
+  liftIO $ void . forkIO $ handlePing bot pingref serv
+
+-- | handle ping/pong
+handlePing :: Bot -> IORef Bool -> String -> IO ()
+handlePing Bot{..} pingref servn = do
+  writeIORef pingref False
+  writeMsg Bot{..} "PING" servn
+  threadDelay 12000000
+  pong <- readIORef pingref
+  if pong then do
+    handlePing Bot{..} pingref servn
+  else
+    return ()
+
+-- | send String to IRC
+handleMsg :: Bot -> IORef Bool -> String -> IO ()
+handleMsg Bot{..} pingref str = do
+  if ping str then do
+     writeIORef pingref True
+     pong str
+  else
+     eval Bot{..} (clean str)
     where
       clean     = drop 1 . dropWhile (/= ':') . drop 1
       ping x    = "PING :" `isPrefixOf` x
-      pong x    = write "PONG" (':' : drop 6 x)
+      pong x    = writeMsg Bot{..} "PONG" (':' : drop 6 x)
 
 -- | Dispatch a command
-eval :: String -> Net ()
-eval     "!quit-lambdabot"     = writeSerial "QUIT" ":Exiting" >> liftIO (exitWith ExitSuccess)
-eval     "!lambda"             = noticemsg "λ!"
-eval x | "!id " `isPrefixOf` x = privmsg (drop 4 x)
-eval x | regexhaskell x        = notifysendmsg x
-eval     "!topic"              = askChannelTopic
-eval     _                     = return () -- ignore anything else.
+eval :: Bot -> String -> IO ()
+eval Bot{..}    "!quit-lambdabot"      = writeMsg Bot{..} "QUIT" ":Exiting" >> liftIO (exitWith ExitSuccess)
+eval Bot{..}     "!lambda"             = noticemsg Bot{..} "λ!"
+eval Bot{..} x | "!id " `isPrefixOf` x = privmsg Bot{..} (drop 4 x)
+eval Bot{..} x | regexhaskell x        = notifysendmsg x
+eval Bot{..}     "!topic"              = askChannelTopic Bot{..}
+eval Bot{..}     _                     = return () -- ignore anything else.
