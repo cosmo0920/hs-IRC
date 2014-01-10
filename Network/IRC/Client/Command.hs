@@ -14,7 +14,6 @@ module Network.IRC.Client.Command
 import Data.List
 import Network.TLS
 import Network.BSD
-import System.IO (Handle)
 import System.Process
 import System.Log.FastLogger
 import Text.Regex.Posix
@@ -101,7 +100,6 @@ writeSerial s t = do
   let bot = Bot { socket = h
                 , tlsCtx = mctx
                 , logger = logSet }
-  serv <- liftIO $ server
   liftIO $ do
     writeMsg bot s t
     loggingMsg logSet (printf "> %s %s" s t)

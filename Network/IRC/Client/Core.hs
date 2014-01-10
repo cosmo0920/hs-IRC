@@ -89,7 +89,7 @@ listen h = do
     s <- init `fmap` liftIO (hGetLine h)
     let s' = filter (`notElem` "\r\n") s
     loggingMsg logSet s'
-    handleMsg bot pingref s'
+    void . forkIO $ handleMsg bot pingref s'
   liftIO $ void . forkIO $ handlePing bot pingref serv
 
 -- | Process each line from the server with ssl context
