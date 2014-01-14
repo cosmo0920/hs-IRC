@@ -8,7 +8,7 @@ module Network.IRC.Client.Command
   , setBotNickname
   , passwordAuth
   , ircJoin
-  , writeSerial
+  , writeNetM
   , writeMsg
   , loggingMsg ) where
 import Data.List
@@ -77,7 +77,7 @@ passwordAuth = do
   if isNothing pass then
     return ()
   else
-    writeSerial "PASS" (fromJust pass)
+    writeNetM "PASS" (fromJust pass)
 
 -- | join IRC
 ircJoin :: Net ()
@@ -86,23 +86,21 @@ ircJoin = do
   chan' <- liftIO $ chan
   real' <- liftIO $ realname
   hostname <- liftIO $ getHostName
-  writeSerial "NICK" nick'
-  writeSerial "USER" (nick'++" "++hostname++" * :"++real')
-  writeSerial "JOIN" chan'
+  writeNetM "NICK" nick'
+  writeNetM "USER" (nick'++" "++hostname++" * :"++real')
+  writeNetM "JOIN" chan'
 
 -- | Send a message out to the server we're currently connected to.
 --  /Serial/ Version.
-writeSerial :: String -> String -> Net ()
-writeSerial s t = do
+writeNetM :: String -> String -> Net ()
+writeNetM s t = do
   h <- asks socket
   mctx <- asks tlsCtx
   logSet <- asks logger
   let bot = Bot { socket = h
                 , tlsCtx = mctx
                 , logger = logSet }
-  liftIO $ do
-    writeMsg bot s t
-    loggingMsg logSet (printf "> %s %s" s t)
+  liftIO $ writeMsg bot s t
   return ()
 
 -- | write String To IRC Server
