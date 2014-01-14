@@ -104,7 +104,7 @@ listenSsl ctx = do
   pingref <- liftIO $ newIORef False
   liftIO $ forever $ do
     out <- recvData ctx
-    let msg = filter (`notElem` "\r\n") $ unpackWithEncoding out
+    let msg = unpackWithEncoding out
     loggingMsg logSet msg
     void . forkIO $ handleMsg bot pingref msg
   liftIO $ void . forkIO $ handlePing bot pingref serv
