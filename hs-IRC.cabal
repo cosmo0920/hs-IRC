@@ -32,9 +32,9 @@ executable hs-IRC
                       CPP
                       GADTs
                       RecordWildCards
-  build-depends:       base          >= 4.5 && < 5
+  build-depends:       base          >= 4.5   && < 5
                      , network       >= 2.3
-                     , tls           >= 1.1 && < 1.2
+                     , tls           >= 1.1   && < 1.2
                      , tls-extra     >= 0.6
                      , cprng-aes     >= 0.5
                      , mtl           >= 2.0
@@ -42,10 +42,10 @@ executable hs-IRC
                      , regex-posix   >= 0.94
                      , text          >= 0.11
                      , bytestring    >= 0.9
-                     , fast-logger   >= 2.1 && < 2.2
-                     , aeson         >= 0.6 && < 0.7
-                     , yaml          >= 0.8 && < 0.9
-                     , lens          >= 3.9 && < 4
+                     , fast-logger   >= 2.1.4 && < 2.2
+                     , aeson         >= 0.6   && < 0.7
+                     , yaml          >= 0.8   && < 0.9
+                     , lens          >= 3.9   && < 4
                      , aeson-lens    >= 0.5
   default-language: Haskell2010
 
