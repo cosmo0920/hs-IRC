@@ -50,7 +50,7 @@ connect = notify $ do
   -- TODO: search suitable Mode
   -- such as, universalNewlineMode, noNewlineTranslation, nativeNewlineMode
   hSetNewlineMode h nativeNewlineMode
-  loggerSet <- newLoggerSet defaultBufSize Nothing
+  loggerSet <- newStdoutLoggerSet defaultBufSize
   useSsl <- usessl
   tls <- if useSsl
     then addTLSContext h
